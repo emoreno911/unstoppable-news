@@ -19,7 +19,7 @@ export const isValidURL = (string) => {
     return (res !== null)
 }
 
-const backendBaseURL = "http://localhost:5000";
+const backendBaseURL = "https://unews-api.vercel.app";
 
 export const request = async ({url, fname, method = 'GET', data = null, _baseURL = null}) => {
 	const instance = axios.create();

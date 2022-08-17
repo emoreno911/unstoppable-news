@@ -1,21 +1,24 @@
-import { Link } from "react-router-dom";
 import Layout from "../app/layout";
 import ListItem from "../app/home/ListItem";
 import { useDatacontext } from "../app/context";
 
 
 function Home() {
-    const { data:{ articleList, isEndOfList }, fn:{ moreArticleList } } = useDatacontext();
+    const { 
+        data:{ articleList, isEndOfList }, 
+        fn:{ moreArticleList, upvoteArticle } 
+    } = useDatacontext();
 
     return (
         <Layout>
-            <div className="table w-full px-3 pb-5 lg:w-5/6 lg:mx-auto">
+            <div className="table w-full px-3 py-5 lg:w-5/6 lg:mx-auto">
                 {
                     articleList.map((data, index) => (
                         <ListItem 
                             index={index} 
                             key={index}
-                            data={data} 
+                            data={data}
+                            onUpvote={upvoteArticle} 
                         />
                     ))
                 }

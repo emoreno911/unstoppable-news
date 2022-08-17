@@ -13,7 +13,7 @@ const DataContext = createContext();
 export const useDatacontext = () => useContext(DataContext);
 
 const DataContextProvider = (props) => { 
-	const perPage = 4;
+	const perPage = 10;
 	const [currentCursor, setCurrentCursor] = useState(0);
 	const [articleList, setArticleList] = useState([]);
 	const [isEndOfList, setIsEndOfList] = useState(false);
@@ -25,6 +25,7 @@ const DataContextProvider = (props) => {
 	useEffect(() => {
 		setTimeout(() => {
 			updateArticleList();
+			console.log(chainIdHex)
 		}, 500);
 	}, [])
 
@@ -48,7 +49,7 @@ const DataContextProvider = (props) => {
 		const _cursor = _response[1].toNumber();
 
 		const articles = _articles.map(article => {
-			const [cid, title, source, date, category, user, upvotes] = article.split('|');
+			const [cid, title, source, date, category, user, upvotes] = article.split('||');
 			return { cid, title, source, date, category, user, upvotes };
 		})
 
@@ -63,7 +64,7 @@ const DataContextProvider = (props) => {
 		const _cursor = _response[1].toNumber();
 
 		const articles = _articles.map(article => {
-			const [cid, title, source, date, category, user, upvotes] = article.split('|');
+			const [cid, title, source, date, category, user, upvotes] = article.split('||');
 			return { cid, title, source, date, category, user, upvotes };
 		})
 
@@ -79,6 +80,52 @@ const DataContextProvider = (props) => {
 			setCurrentCursor(0);
 		}
 	}
+
+	// Upvote
+	const {
+		runContractFunction: upvote,
+	} = useWeb3Contract();
+
+	async function upvoteArticle(cid) {
+		try {
+			let options = {
+				abi,
+				contractAddress,
+				functionName: "upvote",
+				//msgValue: entranceFee,
+				params: { cid }
+			}
+
+			const voteSuccess = async (tx) => {
+				//await tx.wait(1);
+				setArticleList(prev => {
+					const k = prev.findIndex(a => a.cid === cid);
+					const votes = parseInt(prev[k].upvotes);
+					prev[k].upvotes = votes + 1;
+					return prev;
+				});
+			}
+	
+			await upvote({
+				params: options,
+				// onComplete:
+				// onError:
+				onError: handleError,
+				onSuccess: voteSuccess
+			})
+
+		} catch (error) {
+			console.log(error);
+			dispatch({
+				type: "error",
+				message: error.message,
+				title: "Submmit Notification",
+				position: "topR",
+				icon: "bell",
+			})
+		}
+	}
+
 
 	// Submit article functions
 	const {
@@ -183,7 +230,8 @@ const DataContextProvider = (props) => {
 	const fn = {
 		isMobile,
 		submitArticle,
-		moreArticleList
+		moreArticleList,
+		upvoteArticle
 	}
 
 	return (

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { formatDistance } from 'date-fns';
 import { splitHexAddress } from "../utils";
 
-const ListItem = ({ data, index }) => {
+const ListItem = ({ data, index, onUpvote }) => {
     const { cid, title, date, upvotes, category, user, source} = data;
 
     return (
@@ -11,12 +11,15 @@ const ListItem = ({ data, index }) => {
                 {index + 1}
             </div>
             <div className="table-cell align-middle text-sm">
-                <div className="flex flex-col justify-center items-center">
+                <button 
+                    onClick={() => onUpvote(cid)}
+                    className="flex flex-col justify-center items-center"
+                >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
                     </svg>
                     <span className="font-semibold text-xs">{upvotes}</span>
-                </div>
+                </button>
             </div>
             <div className="table-cell align-middle ml-4 py-3 md:py-0">
                 <div className="flex flex-col pl-4">
@@ -29,11 +32,12 @@ const ListItem = ({ data, index }) => {
                     </small>
                 </div>
             </div>
-            <div className="text-right text-gray-400 hidden md:table-cell align-middle justify-center text-sm flex-grow py-2">
-                {splitHexAddress(user)}
+            <div className="capitalize text-center text-gray-400 hidden md:table-cell align-middle justify-center text-sm flex-grow py-2 px-5">
+                {category}
             </div>
             <div className="text-right text-gray-400 hidden md:table-cell align-middle text-sm ml-auto py-2 leading-none">
-                {formatDistance(new Date(parseInt(date)), new Date(), { addSuffix: true })}
+                <span>{splitHexAddress(user)}</span>
+                <small className="block">{formatDistance(new Date(parseInt(date)), new Date(), { addSuffix: true })}</small>
             </div>
         </div>
     )
