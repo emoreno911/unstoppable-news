@@ -4,6 +4,8 @@ dApp: https://unstoppable-news.on.fleek.co/
 
 Demo: https://youtu.be/37I4TjhMxMM
 
+Contract: https://rinkeby.etherscan.io/address/0x6868C12D766D5E18c4D8130D0fF8A0b4F687742F
+
 ## Track
 Storage Solutions for Web 3.0
 
